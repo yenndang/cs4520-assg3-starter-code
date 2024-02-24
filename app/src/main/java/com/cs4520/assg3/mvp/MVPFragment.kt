@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.cs4520.assg3.CalculatorModel
+import com.cs4520.assignment3.R
 import com.cs4520.assignment3.databinding.FragmentMvpBinding
 
 class MVPFragment : Fragment(), MVPContract.View {
@@ -22,7 +23,7 @@ class MVPFragment : Fragment(), MVPContract.View {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): View? {
         _binding = FragmentMvpBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -33,29 +34,48 @@ class MVPFragment : Fragment(), MVPContract.View {
     }
 
     private fun setupClickListeners() {
-        binding.buttonAdd.setOnClickListener {
-            presenter.onAddClicked(
-                binding.number1EditText.text.toString(),
-                binding.number2EditText.text.toString()
-            )
+        // Unified click listener for all operation buttons
+        val operationClickListener = View.OnClickListener { view ->
+            val operation = when (view.id) {
+                R.id.button_add -> "add"
+                R.id.button_substract -> "subtract"
+                R.id.button_multiply -> "multiply"
+                R.id.button_divide -> "divide"
+                else -> null
+            }
+            operation?.let { performOperation(it) }
         }
-        binding.buttonSubstract.setOnClickListener {
-            presenter.onSubtractClicked(
-                binding.number1EditText.text.toString(),
-                binding.number2EditText.text.toString()
-            )
+
+        // Assign the click listener to each button
+        with(binding) {
+            buttonAdd.setOnClickListener(operationClickListener)
+            buttonSubstract.setOnClickListener(operationClickListener)
+            buttonMultiply.setOnClickListener(operationClickListener)
+            buttonDivide.setOnClickListener(operationClickListener)
         }
-        binding.buttonMultiply.setOnClickListener {
-            presenter.onMultiplyClicked(
-                binding.number1EditText.text.toString(),
-                binding.number2EditText.text.toString()
-            )
+    }
+
+    private fun performOperation(operation: String) {
+        // Extract numbers from EditTexts
+        val number1 = binding.number1EditText.text.toString()
+        val number2 = binding.number2EditText.text.toString()
+
+        // Delegate the operation to the presenter
+        when (operation) {
+            "add" -> presenter.onAddClicked(number1, number2)
+            "subtract" -> presenter.onSubtractClicked(number1, number2)
+            "multiply" -> presenter.onMultiplyClicked(number1, number2)
+            "divide" -> presenter.onDivideClicked(number1, number2)
         }
-        binding.buttonDivide.setOnClickListener {
-            presenter.onDivideClicked(
-                binding.number1EditText.text.toString(),
-                binding.number2EditText.text.toString()
-            )
+
+        // Clear inputs after operation
+        clearInputs()
+    }
+
+    private fun clearInputs() {
+        with(binding) {
+            number1EditText.text.clear()
+            number2EditText.text.clear()
         }
     }
 

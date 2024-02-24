@@ -31,6 +31,10 @@ class MVPPresenter(
     }
 
     private fun computeResult(number1: String, number2: String, operation: (Double, Double) -> Double) {
+        if (number1.isBlank() || number2.isBlank()) {
+            view?.displayError("Input is missing")
+            return
+        }
         try {
             val num1 = number1.toDouble()
             val num2 = number2.toDouble()
