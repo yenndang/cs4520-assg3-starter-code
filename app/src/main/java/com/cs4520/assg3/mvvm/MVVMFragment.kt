@@ -39,6 +39,9 @@ class MVVMFragment : Fragment() {
         setupObservers()
         setupOperationButtonListeners()
 
+        // Set the background color for MVP architecture
+        view.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.mvvmBackground))
+
         viewModel.errorLiveData.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let { error ->
                 Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
