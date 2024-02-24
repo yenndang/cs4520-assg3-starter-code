@@ -22,12 +22,12 @@
         android:id="@+id/MVPFragment"
         android:name="com.cs4520.assg3.mvp.MVPFragment"
         android:label="MVP Fragment"
-        tools:layout="@layout/fragment_mvp" />
+        tools:layout="@layout/fragment_calculator" />
 
     <fragment
         android:id="@+id/MVVMFragment"
         android:name="com.cs4520.assg3.mvvm.MVVMFragment"
         android:label="MVVM Fragment"
-        tools:layout="@layout/fragment_mvvm" />
+        tools:layout="@layout/fragment_calculator" />
 
 </navigation>

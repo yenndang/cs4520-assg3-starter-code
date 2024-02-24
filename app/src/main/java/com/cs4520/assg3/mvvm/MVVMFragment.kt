@@ -6,14 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.cs4520.assignment3.databinding.FragmentMvvmBinding
+import com.cs4520.assignment3.R
+import com.cs4520.assignment3.databinding.FragmentCalculatorBinding
 
 class MVVMFragment : Fragment() {
 
     // Variable for view binding to access the layout's views.
-    private var _binding: FragmentMvvmBinding? = null
+    private var _binding: FragmentCalculatorBinding? = null
     // Non-nullable version of the binding variable
     private val binding get() = _binding!!
 
@@ -26,7 +28,7 @@ class MVVMFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout using view binding and return the root view.
-        _binding = FragmentMvvmBinding.inflate(inflater, container, false)
+        _binding = FragmentCalculatorBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -35,6 +37,9 @@ class MVVMFragment : Fragment() {
         // Once the view is created, setup LiveData observers and click listeners for the operation buttons.
         setupObservers()
         setupOperationButtonListeners()
+
+        // Set the background color for MVVM architecture
+        view.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.mvvmBackground))
     }
 
     private fun setupObservers() {
