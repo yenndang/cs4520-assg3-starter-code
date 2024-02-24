@@ -30,5 +30,4 @@
         android:label="MVVM Fragment"
         tools:layout="@layout/fragment_mvvm" />
 
-
 </navigation>
