@@ -1,18 +1,24 @@
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.cs4520.assg3.mvvm.Event
 
 class CalculatorViewModel : ViewModel() {
     // LiveData for the calculation result
     val resultLiveData = MutableLiveData<String>()
 
-    // LiveData for error messages
-    val errorLiveData = MutableLiveData<String>()
+    // Change errorLiveData to use Event wrapper
+    val errorLiveData = MutableLiveData<Event<String>>()
+
+    // When posting a new error
+    fun postError(message: String) {
+        errorLiveData.value = Event(message)
+    }
 
     // Function to perform calculations
     fun calculate(operation: String, number1: String, number2: String) {
         // Check for missing inputs
         if (number1.isBlank() || number2.isBlank()) {
-            errorLiveData.value = "Input is missing"
+            errorLiveData.value = Event("Input is missing")
             return
         }
 
@@ -36,10 +42,10 @@ class CalculatorViewModel : ViewModel() {
             resultLiveData.value = "Result: $result"
         } catch (e: NumberFormatException) {
             // Handle number format exception for invalid input
-            errorLiveData.value = "Invalid input"
+            errorLiveData.value = Event("Invalid input")
         } catch (e: Exception) {
             // Handle other exceptions, including arithmetic exceptions
-            errorLiveData.value = e.message ?: "Error performing operation"
+            errorLiveData.value = Event(e.message ?: "Error performing operation")
         }
     }
 }

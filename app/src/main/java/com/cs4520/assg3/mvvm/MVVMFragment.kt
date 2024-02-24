@@ -23,6 +23,7 @@ class MVVMFragment : Fragment() {
     // This ensures the ViewModel is associated with the fragment's lifecycle.
     private val viewModel: CalculatorViewModel by viewModels()
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -34,25 +35,30 @@ class MVVMFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // Once the view is created, setup LiveData observers and click listeners for the operation buttons.
+        // Once the view is created, setup LiveData observers and click listeners for the operation buttons
         setupObservers()
         setupOperationButtonListeners()
 
-        // Set the background color for MVVM architecture
-        view.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.mvvmBackground))
+        viewModel.errorLiveData.observe(viewLifecycleOwner) { event ->
+            event.getContentIfNotHandled()?.let { error ->
+                Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun setupObservers() {
         // Observe changes to the result LiveData in the ViewModel.
-        // Update the text of the resultTextView whenever the resultLiveData is updated.
         viewModel.resultLiveData.observe(viewLifecycleOwner) { result ->
             binding.resultTextView.text = result
         }
 
         // Observe changes to the error LiveData in the ViewModel.
-        // Show a toast message whenever the errorLiveData is updated.
-        viewModel.errorLiveData.observe(viewLifecycleOwner) { error ->
-            Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+        viewModel.errorLiveData.observe(viewLifecycleOwner) { event ->
+            // Unwrap the Event to get the actual error message
+            event.getContentIfNotHandled()?.let { error ->
+                // Now 'error' is the unwrapped String
+                Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -97,3 +103,4 @@ class MVVMFragment : Fragment() {
         _binding = null
     }
 }
+
